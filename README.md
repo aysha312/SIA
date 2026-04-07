@@ -4,12 +4,6 @@ Prerequisites:
 - Python 3.10+
 - pip
 - Internet connection (for model download)
-  
-Installation:
-git clone https://github.com/aysha312/SIA.git
-cd SIA
-pip install -r requirements.txt
-uvicorn main:app --reload
 
 Configuration:
 API Token: student-access-2026
