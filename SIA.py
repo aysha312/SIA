@@ -5,6 +5,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
+
 nlp = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
 
 # rate limiting
@@ -13,7 +14,7 @@ app = FastAPI(title="NLP Sentiment API")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-#Configuration
+#authentication
 auth_scheme = HTTPBearer()
 API_TOKEN = "student-access-2026"
 
@@ -46,4 +47,24 @@ def analyze_sentiment(request: Request, text: str, token: HTTPAuthorizationCrede
         "input_text": text,
         "label": result[0]['label'],
         "confidence_score": round(result[0]['score'], 4)
+    }
+@app.post("/chat")
+def chatbot(request: Request, text: str, token: HTTPAuthorizationCredentials = Depends(auth_scheme)):
+    
+    if token.credentials != API_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid Token")
+    
+    result = nlp(text)
+    
+    sentiment = result[0]['label']
+    
+    if sentiment == "POSITIVE":
+        reply = "That's nice to hear! 😊"
+    else:
+        reply = "I'm here for you. Tell me more."
+    
+    return {
+        "user_input": text,
+        "sentiment": sentiment,
+        "bot_reply": reply
     }
