@@ -32,5 +32,5 @@ Features
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/franxis24/IJRS.git
-cd IJRS
+git clone https://github.com/aysha312/SIA.git
+cd SIA
