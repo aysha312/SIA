@@ -48,23 +48,3 @@ def analyze_sentiment(request: Request, text: str, token: HTTPAuthorizationCrede
         "label": result[0]['label'],
         "confidence_score": round(result[0]['score'], 4)
     }
-@app.post("/chat")
-def chatbot(request: Request, text: str, token: HTTPAuthorizationCredentials = Depends(auth_scheme)):
-    
-    if token.credentials != API_TOKEN:
-        raise HTTPException(status_code=403, detail="Invalid Token")
-    
-    result = nlp(text)
-    
-    sentiment = result[0]['label']
-    
-    if sentiment == "POSITIVE":
-        reply = "That's nice to hear! 😊"
-    else:
-        reply = "I'm here for you. Tell me more."
-    
-    return {
-        "user_input": text,
-        "sentiment": sentiment,
-        "bot_reply": reply
-    }
